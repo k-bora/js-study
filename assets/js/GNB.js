@@ -49,7 +49,7 @@ export const GNB = async () => {
   gnb.innerHTML = data
     .map((item, index) => {
       return /* html */ `
-        <details name="gnb" ${index === 0 && "open"}>
+        <details name="gnb" ${index === 1 && "open"}>
           <summary>${item.title}</summary>
 
           ${
