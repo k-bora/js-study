@@ -1,7 +1,7 @@
 const mobileSize = 1280;
 const frame = document.querySelector("iframe");
 const button = document.querySelector(".btn-mobile");
-const initial = "/js-study/00Basic/table1.html";
+const initial = "/js-study/01Content/table1.html";
 const current = sessionStorage.getItem("src");
 
 const newTab = (link = initial) => {
