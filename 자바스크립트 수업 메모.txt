@@ -1,0 +1,222 @@
+자바스크립트 수업 메모
+
+● 수업준비
+npx 
+git을 받는게 아님, 코드의 다운로드 zip을 압축으로 품 것처럼
+VSCode 설정 각각 왜 그런지 알아보기
+
+● javascript part1
+ ◎ javascript 시작
+
+head 순서
+- meta
+- title
+- link rel stylesheet href
+- javascript defer(데퍼:도큐먼트를 다 읽고 실행) src
+
+자바스크립트
+.dataset .icon
+html
+<div data-icon></div>
+
+문서가 다 읽어진 후 실행
+제이쿼리
+$(document).ready(function () {
+ //내용
+});
+자바스크립트
+window.addEventListnener('load',()=>{
+ //내용
+})
+
+임베디드 스타일 Embedded Style (자주사용X)
+<style>
+/* 내용 */
+<style>
+
+<script>
+//내용
+</script>
+
+ ◎ 변수와 예약어
+css
+--변수명 : 변수값;
+scss
+$변수면 : 변수값;
+
+const
+컨스트
+재할당이 불가능한 변수 (상수: 변하지 않는 수) 
+무조건 값이 있어야함 = 값이 없는 변수선언 안됨
+
+let
+렛
+재할당이 가능한 변수
+값이 없는 변수선언 가능
+
+var
+바
+앞으로 사용 X
+지역변수의 역할이 잘안됨
+두번정의가 가능 즉 변수명이 동일한 경우 잡아줄수 없음
+
+Uncaught TypeError: Assignment to constant variable.
+잡을 수 없는 타입에러: 변수가 상수에 할당되었습니다.
+
+$와 _ 는 변수명에서 사용할 수 있으나 변수로 사용할 수 없는 특정 단어인 this if break 등등 많다. 
+그외 예약어
+break  case  catch  class  const  continue  debugger  default  delete  do  else  export  extends  false  finally  for    function  if  import  in  instanceof  new  null  return  super  switch  this  throw  true  try  typeof   var  void  while  with  let  static  yield  await
+
+자바스크립트 변수명
+카멜 케이스 camel case 사용
+단어와 단어사이를 대문자로 구별
+
+ ◎ 데이터의 종류
+String 텍스트 데이터를 나타내는 기본적인 데이터
+" " 다른데이터 삽입 X
+' '
+` ${isName}123 ` 데이터삽입가능,  템플릿리터럴 역할 (+연결없이)
+상관없음
+
+Number 정수또는 실수(소수점)을 나타낼 수 있다.
+Boolean 참(true) 또는 거짓(false)의 두 가지 값만을 가질 수 있는 데이터 이다.
+Undefined 값이 할당되지 않은 상태 즉, 값이 지정되지 않았다.
+Null 어떤 값이 의도적으로 비어있음을 의미한다.
+Object 여러데이터를 Key:Value 형태로 저장하는 목적으로 쓰인다.
+Array 여러 데이터를 순차적으로 저장한다.
+Function 재사용 가능한 코드 블록으로, 특정 작업을 수행하기 위해 설계되었다.
+
+ ◎ 연산자
+ ◎ if
+ ◎ Event
+addEventListener : 풀어서 해석 나중에 체크
+
+input 실시간
+change  값이 다를때 and 포거스 아웃 일때
+
+form태그랑 submit 같이 있어야 전송=새로고침 됨
+> form태그이 없다면 click 이벤트로 적용해야됨
+a 태그 새로고침 > href="#none" none아이디값로 이동
+button,reset 새로고침X
+
+ event.preventDefault();
+submit.addEventListener("submit", function (e) {
+  console.log(e);
+  e.preventDefault();
+});
+이때 인수 e를 console.log(e);로 보면 이벤트 submit ,정보, 사용할 수 있는 속성, 기본기능(Prototype)사용할 수 있는거 알수있음 > 나중에 검색
+이때 인수 e는 아무이름으로 정할수있음 대체로 e나 event 많이씀 
+
+(버튼을 감싼 div를 클릭하면)
+target.addEventListener("click", function (e) {
+  e.preventDefault();
+  console.log(e);
+});
+
+변수 target의 기본기능중
+currentTarget
+: 
+null
+target
+: 
+button#child1
+
+    <nav>
+      <ul>
+        <li><button>1</button></li>
+        <li><button>2</button></li>
+        <li><button>3</button></li>
+        <li><button>4</button></li>
+      </ul>
+    </nav>
+
+li.addEventListener('click',()=>{
+  
+})
+이벤트 위임으로 button도 클릭이벤트가 된다.
+
+input은 타임이 넘버여도 타입이 문자임
+
+ ◎ DOM
+Query + Selector
+
+변수로 선언 = 너무길어서 짧게
+--img : url('./images/logo.png');
+
+.selector {
+  background:url(./images/logo.png);
+  background:var(--img);
+}
+
+ input 실시간
+change  값이 다를때 and 포거스 아웃 일때
+
+data-이름
+커스텀 속성을 넣는다.
+
+VSCode Snippet Generator : 좀더 보기
+Snippet 코드입력 예시
+${1:선택자}.forEach((${2:아이템명},${3:인덱스값})=>{
+    $4
+});
+
+password 이상함 집에가서 알아보기 >> autocomplete가 없어서 그럼
+
+폼7 : 추천인 아이디 확인 누르면 추천인 이름을 경고창으로 띄우기
+>>> xxx 님을 추천하셨습니다.
+폼11 : 뉴스레터 구독버튼 누르면 경고창 띄우기
+>>> xxx@xxx.com으로 뉴스레터가 신청되었습니다.
+
+표4(아이콘), 폼1(확인) : 버튼을 누르면 레이어 팝업 띄우기
+
+폼10 : 등록버튼을 누르면 라디오버튼만 선택된 값을 보여주기
+
+*** 1주차 홈과제 12일까지
+
+● javascript part2
+ ◎ 객체
+ ◎ 구조분해할당
+string MDN
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/String
+
+표준내장객체
+ ◎ 문자
+ ◎ 숫자
+ ◎ 날짜
+ ◎ 수학
+
+◎ 배열 
+ - sort() 빼기 좀더 알아보기
+◎ Location : 현재 문서의 URL 정보
+◎ history
+
+pushState
+SPA (스파)
+single page Application
+react, vue
+
+2일차 수업
+스니백: 반복되는거 다 등록 가능 (html,css)
+
+Node / DOM 비교
+DOM: html, text
+Node: html, text, 주석, 공백
+
+content4
+제목,설명,아이콘URL 각각배열
+fli.forEach으로 삽입
+
+오늘 중요한 거는 return,인수와 매개변수
+데이터 바인딩 : 데이터 넣는거 했음~
+
+type = module 은 defer 포함
+import 가져오기
+export 내보내게 할수있다
+이때 함수명 첫글자는 대문자
+enf 스냅
+
+과제 한번에 올려도 됨.
+
+다음주는
+메뉴,탭메뉴,셀렉트
+
