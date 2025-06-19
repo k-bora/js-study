@@ -98,13 +98,13 @@
             color: var(--gray500);
             font-size: 1.5rem;
             a {
-              display: flex;
+              display: inline-flex;
               gap: 0.5rem;
               align-items: center;
               font-weight: 700;
-              &::after {
+              /* &::after {
                 content: url(../images/ico_img.svg);
-              }
+              } */
             }
           }
         }

@@ -14,16 +14,20 @@ const closeBtn = document.querySelector(".close");
 
 // 확인버튼을 누르면 레이어팝업 띄우기 : **xxx님이 로그인 하셧습니다.**
 loginBtn.addEventListener("click", (e) => {
-  // type="submit"은 새로고침되서? 팝업이 자꾸 닫힘?
   e.preventDefault();
-  popup.setAttribute("open", "ture");
+  popup.showModal();
   const inputIdValue = inputId.value;
   // console.log(inputIdValue);
-  popMessage.textContent = inputIdValue;
+
+  if (inputIdValue == "") {
+    popMessage.textContent = "아이디를 입력해주세요.";
+  } else {
+    popMessage.textContent = `${inputIdValue} 님이 로그인 하셧습니다.`;
+  }
 });
 
 closeBtn.addEventListener("click", () => {
-  popup.removeAttribute("open");
+  popup.close();
 });
 
 // // id input 이벤트
