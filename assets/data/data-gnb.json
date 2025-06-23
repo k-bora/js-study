@@ -155,12 +155,17 @@
     "title": "content",
     "depth": [
       {
-        "title": "표",
+        "title": "과제",
         "nav": [
           {
-            "name": "3주차 과제",
+            "name": "3주차",
             "link": "week-3.html"
-          },
+          }
+        ]
+      },
+      {
+        "title": "표",
+        "nav": [
           {
             "name": "표1",
             "link": "table1.html"
