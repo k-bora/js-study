@@ -158,6 +158,10 @@
         "title": "표",
         "nav": [
           {
+            "name": "3주차 과제",
+            "link": "week-3.html"
+          },
+          {
             "name": "표1",
             "link": "table1.html"
           },
