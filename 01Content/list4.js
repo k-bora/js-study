@@ -3,13 +3,13 @@ const list = document.querySelector(".news-list");
 const tabBtns = document.querySelectorAll(".tab-type1 button");
 
 //보도자료
-const spanInner = data1.map((span) => {
+const spanInner = data1.map(({ category, subject, date }) => {
   return `
     <li>
         <a href="">
-            <span class="category">${span.category}</span>
-            <span class="subject">${span.subject}</span>
-            <span class="date">${span.date}</span>
+            <span class="category">${category}</span>
+            <span class="subject">${subject}</span>
+            <span class="date">${date}</span>
         </a>
     </li>
     `;

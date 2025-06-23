@@ -7,7 +7,7 @@ const listInner = listData.map((data) => {
     .map((project) => {
       return /* html */ `
             <div>
-                ${project.link ? "<a href=''>${project.text}</a>" : project.text}
+                ${project.link ? `<a href=''>${project.text}</a>` : `${project.text}`}
                 ${project.image ? "<img src='./images/ico_img.svg'>" : ""}
             </div>
         `;

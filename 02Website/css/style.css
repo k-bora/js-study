@@ -1625,3 +1625,51 @@
 }
 
 /*# sourceMappingURL=style.css.map */
+.select-box {
+  display: inline-block;
+  position: relative;
+  > button {
+    background: url(../images/ico_select.svg) no-repeat right 20px center var(--grayfa);
+    color: var(--graycc);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    padding-inline: 20px;
+    padding-right: 42px;
+    width: var(--width);
+    height: var(--height);
+    border: 1px solid var(--graye1);
+    box-sizing: border-box;
+  }
+  &.active div {
+    display: block;
+  }
+  div {
+    display: none;
+    position: absolute;
+    top: var(--top, 50px);
+    left: 0;
+    font-size: 0;
+    border: 1px solid var(--gray99);
+    li + li {
+      border-top: 1px solid var(--gray99);
+    }
+    button {
+      min-width: 80px;
+      padding: 2px 10px;
+      text-align: left;
+    }
+  }
+}
+
+.tab-contents {
+  .list-type1 {
+    display: none;
+    &.active {
+      margin-top: 60px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(288px, 1fr));
+      gap: 60px 24px;
+    }
+  }
+}

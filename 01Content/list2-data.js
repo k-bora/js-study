@@ -3,7 +3,7 @@ export const listData = [
     year: 2020,
     projects: [
       { text: "세계 최장비거리 기록, 아토맥스 골프공 개발 1", link: false, image: false },
-      { text: "세계 최장비거리 기록, 아토맥스 골프공 개발 1", link: false, image: false },
+      { text: "세계 최장비거리 기록, 아토맥스 골프공 개발 2", link: false, image: false },
     ],
   },
   {
@@ -14,7 +14,7 @@ export const listData = [
     year: 2022,
     projects: [
       { text: "세계 최장비거리 기록, 아토맥스 골프공 개발 1", link: false, image: false },
-      { text: "세계 최장비거리 기록, 아토맥스 골프공 개발 1", link: false, image: false },
+      { text: "세계 최장비거리 기록, 아토맥스 골프공 개발 2", link: false, image: false },
     ],
   },
   {

@@ -4,25 +4,28 @@ const tbody = document.querySelector("tbody");
 // const tableQRows = document.querySelectorAll("tbody tr");
 const totalNum = document.querySelector(".table-info span");
 
-const dataIn = innerText.map((data, index) => {
-  return /*html*/ `
+// const dataIn =
+tbody.innerHTML = innerText
+  .map(({ no, category, title, text }, index) => {
+    return /*html*/ `
           <tr ${index === 0 ? 'class="active"' : ""}>
-            <td>${data.no}</td>
-            <td>${data.category}</td>
-            <td><button>${data.title}</button></td>
+            <td>${no}</td>
+            <td>${category}</td>
+            <td><button>${title}</button></td>
           </tr>
           <tr ${index === 0 ? 'style="display: table-row""' : ""}>
             <td colspan="3">
               <div class="answer">
                 <div>
-                    ${data.text}
+                    ${text}
                 </div>
               </div>
             </td>
           </tr>`;
-});
+  })
+  .join("");
 
-tbody.innerHTML = dataIn.join("");
+// tbody.innerHTML = dataIn.join("");
 
 // 버튼 클릭시 토글
 const buttons = document.querySelectorAll("td button"); // 새로 생성된 버튼들 선택

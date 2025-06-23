@@ -6,6 +6,11 @@
   border-top: 2px solid var(--line2);
   > li {
     border-bottom: 1px solid var(--line);
+    &:has(button.active) {
+      .depth {
+        display: block;
+      }
+    }
     > button,
     > a {
       display: block;
@@ -20,6 +25,7 @@
     button {
       display: flex;
       justify-content: space-between;
+      gap: 15px;
       align-items: center;
       height: 55px;
       background-color: transparent;
@@ -36,6 +42,7 @@
     }
   }
   .depth {
+    display: none;
     padding: 1px 16px 17px;
     a {
       color: var(--text);

@@ -15,19 +15,55 @@ const closeBtn = document.querySelector(".close");
 // 확인버튼을 누르면 레이어팝업 띄우기 : **xxx님이 로그인 하셧습니다.**
 loginBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  popup.showModal();
-  const inputIdValue = inputId.value;
-  // console.log(inputIdValue);
 
-  if (inputIdValue == "") {
+  const inputIdValue = inputId.value.trim();
+  const inputPwValue = inputPw.value.trim();
+
+  popup.showModal();
+
+  if (inputIdValue.length === 0 && inputPwValue.length === 0) {
+    // console.log("아이디,비번 없어");
+    popMessage.textContent = "아이디/비밀번호를 입력해주세요.";
+  } else if (inputIdValue.length === 0) {
+    // console.log("아이디 없어");
     popMessage.textContent = "아이디를 입력해주세요.";
+  } else if (inputPwValue.length === 0) {
+    // console.log("비번 없어");
+    popMessage.textContent = "비밀번호를 입력해주세요.";
   } else {
-    popMessage.textContent = `${inputIdValue} 님이 로그인 하셧습니다.`;
+    // console.log(`${inputIdValue} 로그인`);
+    popMessage.textContent = `${inputIdValue}님이 로그인 하셨습니다.`;
+    inputId.value = "";
+    inputPw.value = "";
   }
 });
 
-closeBtn.addEventListener("click", () => {
-  popup.close();
+// input 삭제버튼 이벤트
+const inputs = document.querySelectorAll("fieldset input");
+
+inputs.forEach((input) => {
+  const inputTxtDelBtn = input.nextElementSibling;
+  inputTxtDelBtn.style.display = "none";
+
+  inputTxtDelBtn.addEventListener("click", () => {
+    input.value = "";
+    inputTxtDelBtn.style.display = "none";
+  });
+
+  input.addEventListener("input", () => {
+    if (input.value.length > 0) {
+      inputTxtDelBtn.style.display = "block";
+    } else {
+      inputTxtDelBtn.style.display = "none";
+    }
+  });
+
+  // 팝업 닫기
+  closeBtn.addEventListener("click", () => {
+    popup.close();
+    inputId.focus();
+    inputTxtDelBtn.style.display = "none";
+  });
 });
 
 // // id input 이벤트
@@ -57,24 +93,3 @@ closeBtn.addEventListener("click", () => {
 //     pwTxtDelBtn.style.display = "none";
 //   }
 // });
-
-// input 이벤트 한번에 도전~ 성공~
-const inputs = document.querySelectorAll("fieldset input");
-
-inputs.forEach((input) => {
-  const inputTxtDelBtn = input.nextElementSibling;
-  inputTxtDelBtn.style.display = "none";
-
-  inputTxtDelBtn.addEventListener("click", () => {
-    input.value = "";
-    inputTxtDelBtn.style.display = "none";
-  });
-
-  input.addEventListener("input", () => {
-    if (input.value.length > 0) {
-      inputTxtDelBtn.style.display = "block";
-    } else {
-      inputTxtDelBtn.style.display = "none";
-    }
-  });
-});

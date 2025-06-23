@@ -1,46 +1,74 @@
-export const data = [
-  {
-    depth1Title: "별다방 사명",
-    depth1Link: "#snb1",
-  },
-  {
-    depth1Title: "별다방 소개",
-    depth1Link: "#snb2",
-    depth2: [
-      {
-        depth2Title: "별다방커피 코리아",
-        depth2Link: "#snb2-1",
-      },
-      {
-        depth2Title: "연혁 및 외부 수상 내역",
-        depth2Link: "#snb2-2",
-      },
-      {
-        depth2Title: "별다방 이야기",
-        depth2Link: "#snb2-3",
-      },
-    ],
-  },
-  {
-    depth1Title: "보도자료",
-    depth1Link: "#snb3",
-  },
-  {
-    depth1Title: "세계의 별다방",
-    depth1Link: "#snb4",
-    depth2: [
-      {
-        depth2Title: "별다방커피 코리아",
-        depth2Link: "#snb2-1",
-      },
-      {
-        depth2Title: "연혁 및 외부 수상 내역",
-        depth2Link: "#snb2-2",
-      },
-      {
-        depth2Title: "별다방 이야기",
-        depth2Link: "#snb2-3",
-      },
-    ],
-  },
-];
+import { data } from "./data/list11_data.js";
+
+export const SNB = (option = {}) => {
+  const config = {
+    parent: ".snb",
+    activeName: "active",
+    depthClassName: "depth",
+    ...option,
+  };
+
+  const { activeName, depthClassName, parent } = config;
+
+  // const snb = document.querySelector(config.parent);
+  const snb = document.querySelector(parent);
+
+  if (!snb) {
+    return;
+  }
+
+  /* -------------------------------- Depth2 제어 ------------------------------- */
+  const depth2 = (arry) => {
+    return arry
+      .map((item2) => {
+        return `
+        <li><a href="${item2.depth2Link}">- ${item2.depth2Title}</a></li>
+    `;
+      })
+      .join("");
+  };
+
+  /* ------------------------------- 서브메뉴 이벤트 제어 ------------------------------ */
+  const handleSNB = () => {
+    const buttons = snb.querySelectorAll("button");
+    // console.log(buttons);
+
+    buttons.forEach((button) => {
+      button.addEventListener("click", () => {
+        button.classList.toggle(activeName);
+      });
+    });
+  };
+
+  /* ------------------------------- 서브메뉴 데이터 바인딩 ------------------------------- */
+  const SNBBind = () => {
+    //   방법1
+    //   ${item.depth2 ? "있음" : "없음"}
+    const result = data.map((item) => {
+      return `
+        <li>
+            ${item.depth2 ? `<button type="button">${item.depth1Title}</button>` : `<a href="${item.depth1Link}">${item.depth1Title}</a>`}
+            ${
+              item.depth2
+                ? `
+                <ul class="${depthClassName}">
+                    ${depth2(item.depth2)}
+                </ul>
+                `
+                : ""
+            }
+        </li>
+    `;
+    });
+
+    snb.innerHTML = result.join("");
+    handleSNB();
+    //   방법2
+    //   snb.innerHTML = data.map((item) => {
+    //     return `
+    //         <li><a href="">보도자료</a></li>
+    //     `;
+    //   }).join('');
+  };
+  SNBBind();
+};
