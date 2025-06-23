@@ -1,7 +1,9 @@
 const mobileSize = 1280;
 const frame = document.querySelector("iframe");
 const button = document.querySelector(".btn-mobile");
-const initial = "/js-study/01Content/table1.html";
+//과제용
+const initial = "/js-study/01Content/week-3.html";
+// const initial = "/00Basic/01-start.html";
 const current = sessionStorage.getItem("src");
 
 const newTab = (link = initial) => {
