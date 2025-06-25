@@ -1,6 +1,12 @@
 import { LearningData } from "./learningData.js";
+
 export const LearningDataInner = () => {
   const tabContents = document.querySelectorAll(".tab-contents > ul");
+
+  if (tabContents.length === 0) {
+    return;
+  }
+
   //   console.log(tabContents[1]);
   tabContents[1].innerHTML = LearningData.map(({ imageSrc, badges, title, hash, type, date, applyDate }) => {
     return `

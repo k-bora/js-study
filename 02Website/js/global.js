@@ -3,6 +3,8 @@ import { CostomSelect } from "./costomSelect.js";
 import { Tab } from "./tab.js";
 import { Alarm } from "./alarm.js";
 import { LearningDataInner } from "./learningDataInner.js";
+import { LoungeNav } from "./loungeNav.js";
+import { NoticeList } from "./notice.js";
 
 Nav({
   ulSelector: ".gnb ul",
@@ -21,3 +23,5 @@ CostomSelect(
 Tab();
 Alarm();
 LearningDataInner();
+LoungeNav();
+NoticeList();
