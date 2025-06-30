@@ -217,6 +217,807 @@ enf 스냅
 
 과제 한번에 올려도 됨.
 
-다음주는
-메뉴,탭메뉴,셀렉트
+● javascript part3
+
+ ◎ prototype 구조
+1단계: 객체란 뭐야?
+**객체(object)**는 물건, 사람처럼 "이름:값" 형태로 정보를 담는 거야.
+const dog = {
+  name: "보리",
+  sound: "멍멍",
+  bark: function () {
+    console.log(this.sound);
+  }
+};
+
+ 2단계: 객체 여러 개 만들고 싶을 땐?
+비슷한 강아지를 100마리 만들려면 어떻게 해야 할까?
+매번 쓰기 귀찮으니까 공장에서 찍어내는 틀이 필요해.
+그게 바로 function → 생성자 함수야!
+function Dog(name, sound) {
+  this.name = name;
+  this.sound = sound;
+}
+
+여기서 this는 **"지금 만들어지는 그 강아지"**야.
+new는 **“이제 찍어낼게요!”**라는 뜻이야.
+
+const bori = new Dog("보리", "멍멍");
+const choco = new Dog("초코", "컹컹");
+
+3단계: 그럼 메서드는 어디에 넣을까?
+강아지마다 짖는 소리 출력하는 함수가 있다고 해보자!
+
+그 함수를 매번 객체마다 새로 만들면 낭비야.
+그래서 공용으로 하나 만들어두고 모두가 같이 쓰는 방식이 있어.
+그게 바로 prototype이야!
+
+Dog.prototype.bark = function () {
+  console.log(this.sound);
+};
+
+이렇게 하면 bori.bark() 하면
+👉 자바스크립트가 “bori 안에는 bark가 없는데?”
+👉 “아! Dog의 prototype 안에 있구나!” 하고 찾아서 실행해줘.
+
+정리하면
+function Dog(...)	객체를 만드는 틀
+new Dog(...)	실제 객체를 만드는 명령
+this	만들어지는 그 객체 자신
+.prototype	그 틀의 공통 저장소
+__proto__	만들어진 객체가 .prototype을 참조하는 숨겨진 길
+
+대상	생성자 함수	공통 저장소 (.prototype)
+me	Person()	Person.prototype
+[]	Array()	Array.prototype
+{}	Object()	Object.prototype
+
+“new 생성자() → prototype에서 기능 상속” 이 흐름으로 돌아가는 거야.
+
+ ◎ Class 기본 문법
+
+1. 기본 구조
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+
+  sayHi() {
+    console.log(`안녕! 나는 ${this.name}이야`);
+  }
+}
+
+2. 사용하기
+const me = new Person("보라");
+me.sayHi(); // 안녕! 나는 보라이야
+
+이문법의 핵심은?
+class : 	객체를 만들기 위한 설계도 선언
+constructor() :	new로 객체 만들 때 실행되는 함수
+this :	만들어지는 그 객체 자신
+클래스 안의 함수 :	자동으로 prototype에 등록됨!
+new	객체를 생성하면서 constructor 실행
+
+◎ getter / setter란?
+객체의 속성을 읽거나 설정할 때 중간에서 뭔가 조작하거나 조건을 걸수있게 도와주는 특별한 함수야.
+쉽게 말하면
+getter :  값을 꺼낼때 자동으로 실행되는 함수
+setter :  값을 넣을떄 자동으로 실행되는 함수
+
+기본예제
+class User {
+  constructor(name) {
+    this._name = name;
+  }
+
+  // 값을 꺼낼 때
+  get name() {
+    console.log("이름을 가져옵니다!");
+    return this._name;
+  }
+
+  // 값을 설정할 때
+  set name(newName) {
+    console.log("이름을 바꿉니다!");
+    this._name = newName;
+  }
+}
+
+const user = new User("보라");
+
+console.log(user.name);     // 이름을 가져옵니다! → 보라
+user.name = "하늘";         // 이름을 바꿉니다!
+console.log(user.name);     // 이름을 가져옵니다! → 하늘
+
+중요한 포인트
+get name()	user.name을 할 때 함수처럼 실행됨
+set name()	user.name = "값"처럼 할 때 함수처럼 실행됨
+_name	내부에서 쓰는 실제 변수 (앞에 _ 자주 붙임)
+
+굳이 왜 써?
+1. 특정 값만 넣게 제한하고 싶을 때
+set age(value) {
+  if (value < 0) {
+    console.log("나이는 0보다 작을 수 없습니다.");
+    return;
+  }
+  this._age = value;
+}
+
+2. 속성처럼 쓰고 싶은데, 실제로는 계산된 값을 주고 싶을 때
+get upperName() {
+  return this._name.toUpperCase();
+}
+
+◎ static이란?
+클래스에 직접 붙는 함수나 속성이야.
+만들어진 객체가 아니라, 클래스 자체가 사용하는 기능!
+
+기본예제
+class Calculator {
+  static add(a, b) {
+    return a + b;
+  }
+
+  multiply(a, b) {
+    return a * b;
+  }
+}
+
+const cal = new Calculator();
+
+호출방법
+Calculator.add(2, 3);   // ✅ 가능! → 5
+cal.multiply(2, 3);     // ✅ 가능! → 6
+
+cal.add(2, 3);          // ❌ 불가능! → 에러!!
+
+인스턴스 메서드 	method() {} 	new로 만든 객체 (ex. user.method())
+static 메서드	static method() {} 	클래스 자체 (ex. User.method()) ** 클래스에 붙여서 써야되
+
+언제 쓰면 좋아?
+객체와 상관없이 모든 인스턴스가 공유하는 공통 로직
+
+🎯 정리 한 줄 요약!
+static은 클래스가 직접 쓰는 애들이다!
+객체한테 주는 기능이 아니라, 공장 자체의 기능!
+
+이해 안감 > 🍩 비유부터 시작해볼게!
+🎂 케이크 가게 예시
+class Cake {
+  constructor(flavor) {
+    this.flavor = flavor;
+  }
+
+  describe() {
+    console.log(`${this.flavor} 맛 케이크입니다.`);
+  }
+
+  static storeInfo() {
+    console.log("이 케이크 가게는 서울에 있어요!");
+  }
+}
+
+const cake1 = new Cake("딸기");
+const cake2 = new Cake("초코");
+
+cake1.describe(); // 딸기 맛 케이크입니다.
+cake2.describe(); // 초코 맛 케이크입니다.
+
+Cake.storeInfo(); // 이 케이크 가게는 서울에 있어요!
+
+✅ Cake.storeInfo() 가능
+❌ cake1.storeInfo() → 에러! 이건 “케이크”가 아니라 “가게 정보”라서!
+
+🧁 여기서 중요한 포인트
+this.flavor	"케이크 한 조각"의 정보 (초코, 딸기 등)
+storeInfo()	"가게 자체"의 정보 (서울에 있음 등)
+
+🎯 진짜 핵심 요약
+일반 메서드	객체(인스턴스)	cake1.describe()	케이크 한 개의 기능
+static 메서드	클래스 자체	Cake.storeInfo()	가게 전체의 기능
+
+핵심 개념만 기억하면 돼!
+✔️ static이 붙은 건 = "클래스 전체(가게)의 정보/기능"
+❌ static 없이 만든 건 = "개별 케이크(객체)의 기능"
+
+💡 만약 static이 없다면?
+모든 정보가 인스턴스 안에 들어가야 하니까,
+매번 만들 때마다 똑같은 가게 정보도 넣어야 해요.
+const cake = new Cake("딸기");
+cake.storeInfo = function () {
+  console.log("서울에 있어요!");
+};
+const cake = new Cake("초코");
+cake.storeInfo = function () {
+  console.log("서울에 있어요!");
+};
+
+✋ 정리 한 줄만 기억하자!
+🧠 static은 "이 클래스 전체가 공통으로 쓸 함수"를 만드는 키워드야.
+객체 하나하나마다 따로 만들 필요 없이, 그냥 클래스 이름으로 바로 씀!
+
+◎ 상속이란?
+
+부모 클래스 (상위 클래스)
+class Cake {
+  constructor(flavor) {
+    this.flavor = flavor;
+  }
+
+  describe() {
+    console.log(`${this.flavor} 맛 케이크입니다.`);
+  }
+}
+
+자식 클래스 (하위 클래스)
+class CheeseCake extends Cake {
+  addCheese() {
+    console.log("치즈가 올라간 케이크예요!");
+  }
+}
+
+사용해보면
+const cake = new Cake("초코");
+cake.describe();       // 초코 맛 케이크입니다.
+
+const cheeseCake = new CheeseCake("딸기");
+cheeseCake.describe(); // 딸기 맛 케이크입니다. ← 부모 메서드 사용!
+cheeseCake.addCheese(); // 치즈가 올라간 케이크예요!
+
+💡 여기서 핵심 정리
+extends	부모 클래스의 기능을 자식이 물려받는다
+super()	부모 클래스의 constructor를 실행할 때 사용
+child.method()	부모의 메서드도 그대로 사용 가능
+
+✅ super()는 뭐야?
+부모 클래스에 있는 constructor()를 실행하겠다는 뜻이야!
+
+class CheeseCake extends Cake {
+  constructor(flavor) {
+    super(flavor); // 부모 constructor(flavor) 호출
+  }
+}
+
+안 쓰면 에러 나요 ❗ 자식 클래스는 반드시 super()부터 호출해야 해요.
+자식 클래스에 constructor 없음	super()❌ 필요 없음	JS가 자동으로 super() 넣어줌
+자식 클래스에 constructor 있음	super()✅ 무조건 필요	super() 안 쓰면 에러!
+
+class IceCreamCake extends Cake {
+  constructor(flavor, topping) {
+    super(flavor); // 부모한테 flavor 물려받고
+    this.topping = topping; // 자식만의 기능 추가!
+  }
+
+  showTopping() {
+    console.log(`${this.topping} 토핑이 있어요!`);
+  }
+}
+
+const iceCake = new IceCreamCake("바닐라", "딸기잼");
+iceCake.describe();      // 바닐라 맛 케이크입니다.
+iceCake.showTopping();   // 딸기잼 토핑이 있어요!
+
+instanceof	이 객체가 특정 클래스의 인스턴스인지 확인
+
+🎯 기억할 한 줄 요약!
+extends는 물려주는 거
+instanceof는 "얘 누구 자식이야?" 확인하는 거
+
+◎ 동기 vs 비동기
+✅ 1. 동기(Synchronous)
+"차례차례, 한 줄씩 줄 서서 처리"
+
+🍜 라면 끓이기 예시
+물을 끓인다 (3분 기다림)
+
+1. 스프를 넣는다
+2. 면을 넣는다
+3. 동기 방식은 이전 작업이 끝나야 다음 작업이 시작돼요.
+
+console.log("1");
+console.log("2");
+console.log("3");
+// 출력: 1, 2, 3 (순서대로 실행)
+
+✅ 2. 비동기(Asynchronous)
+"기다리지 않고, 다른 일 먼저 하고 나중에 결과 받아오기"
+
+🍕 배달 예시
+1. 피자 주문함
+2. 청소함
+3. 피자 도착함 → 먹음
+
+피자 오기까지 기다리지 않고, 청소 같은 다른 일 먼저 처리함!
+
+console.log("1");
+
+setTimeout(() => {
+  console.log("2");
+}, 2000); // 2초 후 실행
+
+console.log("3");
+
+//출력
+1
+3
+(2초 뒤) 2
+
+setTimeout은 비동기 함수예요.
+→ “2초 후에 실행해줘~”라고 맡겨놓고, JS는 바로 다음 줄(3)을 실행해버림!
+
+ 💡자바스크립트는 왜 비동기가 필요할까?
+
+자바스크립트는 브라우저에서 동작하기 때문에
+"사용자 경험이 끊기지 않게 하려고" 비동기 방식을 써요.
+
+🧠 정리
+동기(Sync)
+한 줄씩 차례대로
+console.log, 계산 등
+간단하지만 느릴 수 있음
+계산, 조건문 등
+
+비동기(Async)
+기다리지 않고 다음 코드 실행
+setTimeout, fetch, 이벤트 등
+복잡하지만 사용자 경험 좋음
+서버통신, 사용자 이벤트 등
+
+🔍 대표적인 비동기 함수들
+setTimeout()	일정 시간 후 실행
+setInterval()	일정 시간마다 반복 실행
+fetch()	서버에서 데이터 가져오기
+addEventListener()	클릭 등 사용자 이벤트 대기
+
+◎ 콜백
+✅ 콜백(callback)이란?
+"함수 안에 또 다른 함수를 넣어서,
+나중에 실행되게 하는 것"
+
+🍳 비유로 쉽게 설명!
+엄마: “설거지 다 끝나면, 전화 줘~”
+→ 이때 **“전화 줘”**가 콜백이야!
+
+즉,
+“이 일이 끝나면, 이 함수를 실행해줘~”
+그게 바로 콜백!
+
+코드 예시
+function finishHomework(subject, callback) {
+  console.log(`${subject} 숙제를 다 했어요!`);
+  callback(); // 나중에 실행될 함수
+}
+
+function playGame() {
+  console.log("이제 게임하자!");
+}
+
+finishHomework("수학", playGame);
+
+🔹 출력:
+수학 숙제를 다 했어요!
+이제 게임하자!
+
+✅ 콜백은 비동기 상황에서 더 자주 써요
+setTimeout(() => {
+  console.log("3초 후 실행됨!");
+}, 3000);
+
+여기서 () => {} 이게 콜백 함수야
+→ "3초 기다린 다음에 이거 실행해줘~"
+
+😱 그럼 콜백 지옥이 뭐야?
+콜백 안에 콜백 안에 콜백… 점점 들여쓰기 지옥이 되는 상태!
+
+예시: 콜백 지옥 🙀
+setTimeout(() => {
+  console.log("1번 작업");
+
+  setTimeout(() => {
+    console.log("2번 작업");
+
+    setTimeout(() => {
+      console.log("3번 작업");
+
+      setTimeout(() => {
+        console.log("4번 작업");
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
+
+💡 왜 콜백 지옥이 문제야?
+가독성	코드가 점점 오른쪽으로 밀림
+유지보수	중간에 하나 고치거나 빼기 어려움
+에러 처리	try-catch도 어렵게 됨
+
+🎯 그래서 나온 게 Promise → async/await
+비동기를 콜백 없이 더 깔끔하게 쓰게 해주는 문법
+
+◎ Promise(프로미스)
+"비동기 작업이 성공했는지 실패했는지를
+나중에 알려주는 약속 객체"
+
+🍕 배달 비유로 설명하면...
+피자를 주문했어!
+→ 지금은 안 왔지만,
+→ 30분 뒤에 배달이 "오거나(성공)" "실패하거나(전화 끊김)" 하겠지?
+
+영어단어 뜻
+resolve : 해결하다
+reject : 거절하다, 거부하다
+
+✅ 기본 문법
+const promise = new Promise((resolve, reject) => {
+  // 여기서 비동기 작업을 해요!
+
+  const success = true;
+
+  if (success) {
+    resolve("성공!");
+  } else {
+    reject("실패!");
+  }
+});
+
+resolve() → 성공 시 실행 // than(함수)를 실행
+reject() → 실패 시 실행
+
+✅ 결과 받아오는 방법
+promise
+  .then((result) => {
+    console.log("✅", result); // 성공했을 때 실행
+  })
+  .catch((error) => {
+    console.log("❌", error); // 실패했을 때 실행
+  });
+
+✅ .then() 이란?
+Promise가 성공했을 때 실행되는 코드를 넣는 함수!
+
+promise.then((결과를_받는_함수) => {
+  // 성공하면 여기 실행돼!
+});
+
+예제
+const myPromise = new Promise((resolve, reject) => {
+  resolve("성공!");
+});
+
+myPromise.then((result) => {
+  console.log(result); // "성공!"
+});
+
+✅ .catch() 이란?
+Promise가 실패했을 때 실행되는 코드를 넣는 함수!
+
+promise.catch((에러를_받는_함수) => {
+  // 실패하면 여기 실행돼!
+});
+
+const failPromise = new Promise((resolve, reject) => {
+  reject("에러 났어요!");
+});
+
+failPromise
+  .then((result) => {
+    console.log("이건 실행 안돼요");
+  })
+  .catch((error) => {
+    console.log(error); // "에러 났어요!"
+  });
+
+
+resolve = 성공했을 때 부르는 함수
+reject = 실패했을 때 부르는 함수
+
+****************************************************************
+resolve()는
+👉 "나 끝났어! 성공했어!" 라고 말해주는 버튼!
+👉 그래야 .then()으로 넘어갈 수 있어요 💡
+
+resolve() 여러 개 가능해?	호출은 가능하지만, 첫 번째만 반영되고 나머진 무시돼!
+✋✋✋✋✋ resolve, reject 순서 바꿔도 되나?	❌ 절대 안 돼요. 자바스크립트가 순서대로 넣어줌 
+: 즉 이러게 두개만 들어갈수있음 // 아님 성공 하나만
+이름은 바꿔도 되나?	✅ 네! 성공버튼, 실패버튼 이런 식으로도 가능
+순서 기준으로 작동함	✅ 첫 번째: 성공, 두 번째: 실패
+
+✅ 예제 1: 제일 간단한 성공 Promise
+const promise = new Promise((resolve) => {
+  resolve("🎉 성공!");
+});
+
+promise.then((result) => {
+  console.log("✅ then 결과:", result);
+});
+
+결과:
+✅ then 결과: 🎉 성공!
+
+resolve("🎉 성공!")이 실행되면서 result에 값이 들어가요.
+
+
+🧪 예제
+const pizzaOrder = new Promise((resolve, reject) => {
+  const isOvenWorking = true;
+
+  setTimeout(() => {
+    if (isOvenWorking) {
+      resolve("피자가 완성됐어요!");
+    } else {
+      reject("오븐이 고장났어요 😢");
+    }
+  }, 2000);
+});
+
+pizzaOrder
+  .then((msg) => {
+    console.log("✅", msg);
+  })
+  .catch((err) => {
+    console.log("❌", err);
+  });
+
+패치를 이용한 기본 사용법
+fetch("https://jsonplaceholder.typicode.com/posts/1")
+  .then((response) => {
+    return response.json(); // 응답을 JSON으로 바꿔주는 작업도 비동기임!
+  })
+  .then((data) => {
+    console.log("✅ 받아온 데이터:", data);
+  })
+  .catch((err) => {
+    console.log("❌ 에러:", err);
+  });
+
+💡 왜 response.json()도 또 .then()을 쓰는 거야?
+fetch로 받아온 응답은 진짜 데이터가 아니라 껍데기(response)
+.json()은 그 안에서 데이터를 꺼내오는 또 하나의 비동기 작업이야!
+
+📦 fetch()가 반환하는 건?
+const result = fetch("URL");
+// result는 Promise 객체!
+
+그래서 .then(), .catch()로 연결해서 결과를 받는 거야!
+
+✅ .ok란?
+fetch()의 응답 객체(Response) 안에 있는 속성 중 하나야.
+
+fetch(...).then((response) => {
+  console.log(response.ok); // true 또는 false
+});
+
+true	서버 응답이 **정상적(성공)**이라는 뜻 (예: 200, 201 등)
+false	서버 응답이 실패했다는 뜻 (예: 404, 500 등)
+
+성공 응답
+fetch("https://jsonplaceholder.typicode.com/posts/1")
+  .then((res) => {
+    console.log(res.status); // 200
+    console.log(res.ok);     // true
+  });
+
+실패 응답
+fetch("https://jsonplaceholder.typicode.com/posts/99999") // 없는 게시글
+  .then((res) => {
+    console.log(res.status); // 404
+    console.log(res.ok);     // false
+  });
+
+💡 왜 이걸 쓰냐면?
+fetch()는 404, 500 에러라도 에러를 "던지지 않음"
+그래서 응답은 받아왔지만 실패했는지 확인하려면 .ok를 꼭 써야 돼!
+
+
+✅ 예제: 에러도 확인해보자
+
+fetch("https://jsonplaceholder.typicode.com/posts/10000") // 없는 글 ID
+  .then((res) => {
+    if (!res.ok) {
+      throw new Error("서버 응답 에러!"); // 강제로 실패 처리
+    }
+    return res.json();
+  })
+  .then((data) => {
+    console.log("✅ 데이터:", data);
+  })
+  .catch((err) => {
+    console.log("❌ 에러:", err.message);
+  });
+
+✅ throw new란?
+일부러 에러를 발생시켜서 catch()로 보내는 문법이야!
+
+쉬운 말로 설명하면
+throw new Error("에러 메시지");
+→ “⚠️ 이 상황은 문제가 있으니까,
+여기서 코드 멈추고 에러로 처리해줘!” 라고 던지는(throw) 거야!
+
+✅ fetch랑 같이 쓸 땐 왜 쓰냐면?
+fetch()는 에러 상황이어도 catch()로 자동 안 가기 때문에
+우리가 직접 throw로 강제 에러 처리를 해줘야 돼!
+
+💡 throw는 꼭 Error 객체로만 해야 돼?
+아니야! 이론적으로는 아무 값이나 던질 수 있어요.
+
+throw "문자도 가능";
+throw 404;
+throw { message: "에러 발생!", code: 123 };
+
+하지만 👉 new Error("메시지") 형태가 표준이고,
+err.message 등으로 깔끔하게 처리 가능해서 가장 자주 써요!
+
+◎ async/await 한 줄 요약
+Promise를 동기처럼 보이게 만들어주는 문법
+.then() 없이 → 순서대로 → 깔끔하게
+
+✅ 기본 예제
+function wait(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`⏰ ${ms}ms 지남`);
+    }, ms);
+  });
+}
+
+async function run() {
+  const res1 = await wait(1000);
+  console.log(res1); // 1초 뒤 출력
+
+  const res2 = await wait(1000);
+  console.log(res2); // 또 1초 뒤 출력
+
+  console.log("✅ 끝!");
+}
+
+run();
+
+설명!
+async 붙은 함수 안에서만 await 사용 가능!
+await은 Promise가 끝날 때까지 기다린 다음에 결과를 받아서 실행함
+
+async	어싱크		비동기 함수 선언 // asynchronous의 줄임말 // asynchronous = 비동기적인
+await	어웨잇		비동기 작업을 기다림
+Promise 프로미스		약속 객체, 비동기 결과를 담음
+resolve 리졸브		성공 결과를 넘김
+reject	리젝트		실패 결과를 넘김
+fetch	페치			데이터 요청 (가져오다)
+response 리스폰스	응답
+
+✅ fetch 예제 (실전형!)
+
+async function getPost(id) {
+  try {
+    const res = await fetch(`https://jsonplaceholder.typicode.com/posts/${id}`);
+
+    if (!res.ok) {
+      throw new Error(`❌ 서버 응답 실패 (입력 ID: ${id})`);
+    }
+
+    const data = await res.json();
+    console.log("✅ 받아온 데이터:", data);
+  } catch (err) {
+    console.log("🚨 에러:", err.message);
+  }
+}
+
+getPost(1);      // 정상 호출
+getPost(999999); // 실패 처리
+
+
+예제들에 function의 일반 함수지만,
+화살표 함수를 쓰는게 좋음
+자바스크립트에서 function으로 만든 일반 함수는
+자기만의 this를 다시 가지게 돼.
+그런데 화살표 함수는 부모의 this를 그대로 씀!
+
+const func1 = async function () {
+  console.log(this); // this 바뀔 수 있음
+ };
+
+ const func2 = async () => {
+  console.log(this); // this는 바깥과 같음
+ };
+
+✅  res.json()은 뭐야?
+
+const res = await fetch("URL");
+const data = await res.json();
+
+"서버에서 받은 응답 데이터를 JSON(객체)로 꺼내줘!"
+라고 요청하는 거야.
+
+fetch()는 서버에서 데이터를 받아오는데,
+그걸 바로 객체처럼 쓸 수는 없고 껍데기(response) 안에 들어 있어!
+
+const res = await fetch("URL");
+
+console.log(res); // 이런 구조
+// {
+//   body: ReadableStream,
+//   headers: {},
+//   ok: true,
+//   status: 200,
+//   ...
+// }
+
+즉, 이건 그냥 응답 정보일 뿐,
+**데이터(내용물)**은 res.json()으로 꺼내야 하는 거야.
+
+✅ 왜 await res.json()이고, 변수에 담았을까?
+
+const data = await res.json();
+console.log(data);
+
+res.json()도 Promise야!
+→ **비동기적으로 데이터를 파싱(해석)**해줘야 하거든.
+
+그래서 await로 기다려야 해!
+그리고 결과가 완성되면 data 변수에 담아서 다른 작업에 쓸 수 있게 해요.
+
+👎 만약 이렇게 쓴다면?
+
+console.log(res.json()); // ❌ Promise 객체만 출력됨
+
+데이터를 꺼내는 작업이 아직 안 끝났기 때문에
+→ 실제 값이 아니라 Promise 자체가 출력돼.
+
+✅ 정리
+
+const res = await fetch("URL");     // 응답 껍데기 받아옴
+const data = await res.json();      // 안에 내용물(json)을 꺼냄
+console.log(data);                  // 이제 진짜 데이터 출력 가능!
+
+res.json()	응답에서 JSON 데이터 꺼내는 Promise
+await res.json()	그 작업이 끝날 때까지 기다림
+const data = ...	꺼낸 JSON 데이터를 변수에 담아 재사용 가능
+
+😎 서버에서 데이터를 꺼낼때 쓰는 중요한 애들
+
+✅ res.text()
+👉 응답을 **문자열(string)**로 꺼내고 싶을 때 사용!
+
+const res = await fetch("https://example.com/");
+const text = await res.text();
+console.log(text); // HTML 전체가 string으로 출력됨
+
+✔️ text()는 결과를 그냥 문자열로 꺼내줌
+✔️ JSON 형식이 아닌, 그냥 텍스트나 HTML, XML 등일 때 사용해!
+
+✅ res.blob()
+👉 응답을 **파일(binary)**처럼 꺼내고 싶을 때 사용!
+이미지, PDF, 오디오, 영상 등 파일 다운로드 받을 때 자주 써.
+
+const res = await fetch("https://via.placeholder.com/150");
+const blob = await res.blob();
+
+// 화면에 이미지로 보여주기
+const imgURL = URL.createObjectURL(blob);
+document.querySelector("img").src = imgURL;
+
+✔️ blob()은 이미지나 영상처럼 **덩어리(binary)**로 처리할 수 있게 만들어줘요
+✔️ createObjectURL()로 브라우저에서 임시 링크 만들 수 있어요!
+
+✨ 한 줄 요약
+🔹 json() → 객체 데이터
+🔹 text() → 문자열
+🔹 blob() → 파일(binary)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

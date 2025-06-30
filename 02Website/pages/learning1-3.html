@@ -314,18 +314,20 @@
             </tr>
           </tbody>
         </table>
-        <div class="align center mt30"><button class="btn white base rounded">제출</button></div>
+        <div class="align center mt30"><button class="btn white base rounded error" data-popup-open="popup">제출</button></div>
+        <div class="align center mt30"><button class="btn white base rounded submit" data-popup-open="popup2">제출2</button></div>
 
-        <dialog class="dialog">
-          <button class="btn-close" aria-label="닫기"></button>
-          <div class="text-type3 text-center">
-            프로그램 신청이 완료되었습니다.<br />
-            승인 여부는 마이페이지에서 확인하시기 바랍니다.<br />
-            (최대 일주일 소요)
-          </div>
+        <dialog class="dialog" data-popup="popup">
+          <button class="btn-close" aria-label="닫기" data-popup-close="popup"></button>
+          <div class="dialog-content">팝업 1</div>
           <div class="align center mt30"><button class="btn white base">확인</button></div>
         </dialog>
 
+        <dialog class="dialog" data-popup="popup2">
+          <button class="btn-close" aria-label="닫기" data-popup-close="popup2"></button>
+          <div class="dialog-content">팝업 2</div>
+          <div class="align center mt30"><button class="btn white base">확인</button></div>
+        </dialog>
         <!-- 본문 끝 -->
       </div>
     </main>

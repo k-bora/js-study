@@ -1,6 +1,8 @@
 import { SNB } from "../list11.js";
 import { Select } from "./Select.js";
 import { Tab } from "./Tab.js";
+import { Tab2 } from "./Tab2.js";
+import { Dialog } from "./Dialog.js";
 
 // 옵션을 넣어서 제어
 SNB({
@@ -22,3 +24,7 @@ Select(
 
 Tab(".tab", ".tab-contents");
 Tab(".tab2", ".tab-contents2");
+
+Tab2("tab");
+
+Dialog("popup", true);

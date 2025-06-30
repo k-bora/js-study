@@ -11,7 +11,26 @@
 
   <body>
     <div class="wrapper">
-      <nav></nav>
+      <!-- 클래스 없이 커스텀 속성으로 만들기 // 스타일은 클래스, 기능은 data-속성으로 분리 -->
+      <div>
+        <!-- <ul class="tab-type1" data-tab="아이디값"> -->
+        <ul class="tab-type1" data-tab="tab">
+          <li data-tab-item><button>분양공고 보기</button></li>
+          <li data-tab-item><button>분양레터 구독신청</button></li>
+          <li data-tab-item class="active"><button>분양레터 해지신청</button></li>
+        </ul>
+        <!-- <div class="tab-contents" data-tab-content="아이디값"> -->
+        <div data-tab-contents="tab">
+          <div data-tab-content class="mt26">탭내용1</div>
+          <div data-tab-content class="mt26">탭내용2</div>
+          <div data-tab-content class="mt26 active">탭내용3</div>
+        </div>
+      </div>
+
+      <br />
+      <hr />
+      <br />
+
       <div>
         <ul class="tab-type1 tab">
           <li><button>분양공고 보기</button></li>
@@ -24,6 +43,11 @@
           <div class="tab-content mt26 active">탭내용3</div>
         </div>
       </div>
+
+      <br />
+      <hr />
+      <br />
+
       <div>
         <ul class="tab-type1 tab2">
           <li><button>분양공고 보기</button></li>
